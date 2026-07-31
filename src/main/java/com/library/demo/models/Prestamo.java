@@ -33,6 +33,6 @@ public class Prestamo {
     private LocalDate fecha_devolucion;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private EstadoPrestamoEnum estado_prestamo;
+    @Column(name = "estado_prestamo", nullable = false)
+    private EstadoPrestamoEnum estadoPrestamo;
 }

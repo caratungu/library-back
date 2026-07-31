@@ -51,8 +51,8 @@ public class PrestamoService {
 
     public Optional<Prestamo> actualizar(Long id, Prestamo prestamoDetalles) {
         return prestamoRepository.findById(id).map(prestamoExistente -> {
-            if (prestamoDetalles.getEstado_prestamo() != null) {
-                prestamoExistente.setEstado_prestamo(prestamoDetalles.getEstado_prestamo());
+            if (prestamoDetalles.getEstadoPrestamo() != null) {
+                prestamoExistente.setEstadoPrestamo(EstadoPrestamoEnum.valueOf(prestamoDetalles.getEstadoPrestamo().name()));
             }
             if (prestamoDetalles.getFecha_prestamo() != null) {
                 prestamoExistente.setFecha_prestamo(prestamoDetalles.getFecha_prestamo());
@@ -84,7 +84,7 @@ public class PrestamoService {
 
         List<Prestamo> prestamosActivos = prestamoRepository.findByUsuarioId(usuario.getId());
         prestamosActivos = prestamosActivos.stream()
-                .filter(prestamo -> prestamo.getEstado_prestamo() == EstadoPrestamoEnum.ACTIVO)
+                .filter(prestamo -> prestamo.getEstadoPrestamo() == EstadoPrestamoEnum.ACTIVO)
                 .filter(prestamo -> prestamo.getLibro().getId().equals(libro.getId()))
                 .toList();
 
@@ -98,7 +98,7 @@ public class PrestamoService {
         nuevoPrestamo.setEjemplar_codigo(ejemplar.getCodigo());
         nuevoPrestamo.setFecha_prestamo(dto.fecha_prestamo());
         nuevoPrestamo.setFecha_devolucion(dto.fecha_devolucion());
-        nuevoPrestamo.setEstado_prestamo(EstadoPrestamoEnum.ACTIVO);
+        nuevoPrestamo.setEstadoPrestamo(EstadoPrestamoEnum.ACTIVO);
 
         ejemplarService.marcarComoPrestado(ejemplar.getId());
         return prestamoRepository.save(nuevoPrestamo);
@@ -110,7 +110,7 @@ public class PrestamoService {
 
         for (Prestamo prestamo : prestamosActivos) {
             if (prestamo.getFecha_devolucion().isBefore(java.time.LocalDate.now())) {
-                prestamo.setEstado_prestamo(EstadoPrestamoEnum.EN_ATRASO);
+                prestamo.setEstadoPrestamo(EstadoPrestamoEnum.EN_ATRASO);
                 prestamoRepository.save(prestamo);
             }
         }
